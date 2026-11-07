@@ -20,7 +20,21 @@ No color changes, no materials, no fonts — it only collapses the one-control-p
 
 </div>
 
-![Before / After](docs/assets/before-after.svg)
+> ### 🎯 Give the sidebar's vertical space back to Workspace
+>
+> **That is the original motivation behind this skin — and its only acceptance test.**
+>
+> Controls keep piling up at the top of the sidebar — panels, plugin entries, usage cards, remote-control icons… and every one of them eats into the Workspace session list below.
+> This project does exactly one thing: **make Workspace grow again.** Every rule here serves that goal; anything that doesn't is left out.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="docs/assets/before.png" alt="Before: ten panels each take a whole row, pushing the session list out of view" width="300"><br><sub><b>Before</b> · ten panel rows eat ~740px, the session list is pushed out of sight</sub></td>
+<td width="50%" valign="top"><img src="docs/assets/after.png" alt="After: panels become a two-row icon strip, about six more sessions fit" width="300"><br><sub><b>After</b> · panels collapse to a 66px icon strip; ~6 more sessions fit, icons merged into the account row</sub></td>
+</tr>
+</table>
+
+> Both images are real UI screenshots; nickname, workspace names, session titles and usage figures were replaced with placeholders.
 
 ---
 
@@ -80,7 +94,9 @@ cp skin/skin.json skin/skin.css skin/patches.css ~/.dsh/skins/tight-sidebar/
 
 Once the footer icons are pinned to the right of the account row with `position:absolute`, they leave the flow — but their container stays in the flow holding a 36px empty box.
 
-![Footer anatomy](docs/assets/footer.svg)
+<img src="docs/assets/footer-compare.png" alt="Footer before/after: icons on their own row → merged into the account row" width="820">
+
+> Left: the action icons take a whole row of their own and the account row is squeezed down to a bare avatar. Right: the icons sit at the right edge of the account row — one whole row saved.
 
 **Rule of thumb: the icons moved out, so demolish the old house.** One `height:0` fixes it; `overflow` must stay `visible` or the pinned icons get clipped.
 

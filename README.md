@@ -20,7 +20,21 @@
 
 </div>
 
-![改前 / 改后对比](docs/assets/before-after.svg)
+> ### 🎯 把侧边栏纵向空间还给「工作区」
+>
+> **这是这个皮肤最初的动机，也是最终的验收标准。**
+>
+> 侧栏顶部会不断长出新控件 —— 面板、插件入口、用量卡片、远程控制图标……每多一个，下面那张「工作区」的会话列表就被挤矮一截。
+> 这个项目要做的只有一件事：**让「工作区」重新长大**。所有改动都服从这一条，不符合的一律不加。
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="docs/assets/before.png" alt="改前：10 个面板各占一行，会话列表被挤到视野外" width="300"><br><sub><b>改前</b> · 10 个面板占满约 740px，会话列表整段被挤出视野</sub></td>
+<td width="50%" valign="top"><img src="docs/assets/after.png" alt="改后：面板压成 2 行图标条，同样高度多显示 6 个会话" width="300"><br><sub><b>改后</b> · 面板 = 2 行图标条 66px，同样高度多显示约 6 个会话，图标并入账号行</sub></td>
+</tr>
+</table>
+
+> 两张图都是真实界面截图，昵称、工作区名、会话标题与用量数字已替换为占位值。
 
 ---
 
@@ -82,7 +96,9 @@ cp skin/skin.json skin/skin.css skin/patches.css ~/.dsh/skins/tight-sidebar/
 
 页脚图标被绝对定位钉到账号行右侧后，按钮脱离了文档流 —— 但它的容器还留在流里，保留着 36px 的空盒子。
 
-![页脚解剖](docs/assets/footer.svg)
+<img src="docs/assets/footer-compare.png" alt="页脚对比：图标独占一行 → 并入账号行右侧" width="820">
+
+> 左边：动作图标独占一整行，账号行只剩一个头像。右边：图标并入账号行右侧，页脚净省一整行。
 
 **口诀：图标搬家了，旧房子要拆。** 补一条 `height:0` 就够，`overflow` 必须留 `visible`（否则把钉住的图标裁掉）。
 
