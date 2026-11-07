@@ -3,9 +3,9 @@
 <h1>🗂️ Tight Sidebar · 紧凑侧边栏</h1>
 
 <p>
-<b>🌐 Language / 语言</b><br>
-🇬🇧 <b>English</b>　·　🇨🇳 <a href="README.md"><b>简体中文 →</b></a>
-</p>
+<b>🌐 语言 / Language</b><br>
+<a href="README.en.md"><img src="https://img.shields.io/badge/English-current-brightgreen?style=for-the-badge" alt="current" height="28"></a> <a href="README.md"><img src="https://img.shields.io/badge/%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-Switch-2f6feb?style=for-the-badge" alt="switch" height="28"></a><br>
+<sub>Current: English　·　切换到简体中文 →</sub></p>
 
 <p>
 <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-3da639?style=flat-square" alt="MIT"></a>

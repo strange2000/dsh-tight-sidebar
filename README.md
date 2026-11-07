@@ -4,8 +4,8 @@
 
 <p>
 <b>🌐 语言 / Language</b><br>
-🇨🇳 <b>简体中文</b>　·　🇬🇧 <a href="README.en.md"><b>English →</b></a>
-</p>
+<a href="README.md"><img src="https://img.shields.io/badge/%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-%E5%BD%93%E5%89%8D-brightgreen?style=for-the-badge" alt="current" height="28"></a> <a href="README.en.md"><img src="https://img.shields.io/badge/English-%E5%88%87%E6%8D%A2%E8%AF%AD%E8%A8%80-2f6feb?style=for-the-badge" alt="switch" height="28"></a><br>
+<sub>当前：简体中文　·　Switch to English →</sub></p>
 
 <p>
 <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-3da639?style=flat-square" alt="MIT"></a>
