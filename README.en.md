@@ -36,6 +36,16 @@ No color changes, no materials, no fonts — it only collapses the one-control-p
 
 > Both images are real UI screenshots; nickname, workspace names, session titles and usage figures were replaced with placeholders.
 
+### 🏷 Icons without labels — but never unidentifiable
+
+The question everyone asks about the icon strip: won't I lose track of which icon is which? No. Hover any icon and its name pops up right below it — you still read icon *and* name:
+
+<img src="docs/assets/hover-tooltip.png" alt="Hovering the Skill / MCP icon reveals its name" width="440">
+
+- The tooltip is **pure CSS** (`:hover` / `:focus-visible`) — no plugin, no `title` attribute, identical on Windows, macOS and the web;
+- It appears on **keyboard focus (`Tab`)** too, not only on mouse hover;
+- The label is the panel's original title, merely moved into an overlay — nothing was deleted.
+
 ---
 
 ## ✨ What it does
