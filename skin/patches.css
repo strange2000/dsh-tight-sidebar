@@ -1,0 +1,254 @@
+/*
+ * 紧凑侧边栏 · L3 patches（自由选择器层）
+ *
+ * 目的：把侧边栏的纵向空间还给「工作区」（会话列表）。
+ *  1) 全局面板行收成自适应多列（窄窗 2 列、常规 3 列、宽窗 4 列）；
+ *  2) 页脚动作图标（远程控制 / 电话）钉到最下方账号行的右侧；
+ *  3) 会话轨不再硬撑 180px。
+ *
+ * 约束：只在侧边栏展开时生效（body 上无 [data-sidebar-collapsed]）；不碰颜色。
+ *
+ * 第 2 段为什么是「绝对定位 + 清掉中间层的 position」：
+ *   前几版都在猜插槽条目的嵌套层数，全失败。v4 的实测结果是：两个图标
+ *   确实落到了账号行那一行（bottom 生效），但都挤在离右边 100 多像素的
+ *   地方、互相重叠 —— 这是典型的「绝对定位参照到了某个窄的中间层」。
+ *   所以现在把 footArea 里所有非 button 的中间层一律 position:static，
+ *   逼着按钮只认 footArea 这一个锚点；再用属性点名把两个图标分开摆。
+ */
+
+/* ── 1. 全局面板列表：图标条（36×36 方块）+ 悬停浮出文字 ────────────────
+   几何照抄官方「侧栏收起」态那套（.collapsed .panelRow{width:36px;height:36px;
+   justify-content:center;margin:0;padding:0}），所以不依赖任何插件属性、也不需要脚本。
+   展开态下文字 span 仍然在 DOM 里（wide=true 才渲染），这里把它从版流里摘出来
+   改成浮层，:hover / :focus-visible 时显示 —— Windows 与 macOS 都靠 CSS 伪类，
+   行为完全一致，文字一个字都不少。 */
+body:not(:has([data-sidebar-collapsed])) [class*="panelList"] {
+  display: flex !important;
+  flex-flow: row wrap !important;
+  gap: 2px !important;
+  margin: 0 2px 8px !important;
+  overflow: visible !important;
+}
+
+body:not(:has([data-sidebar-collapsed])) [class*="panelRow"] {
+  position: relative !important;
+  flex: 0 0 auto !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: visible !important;
+  z-index: 1 !important;
+}
+
+/* 1b. 文字标签：留在 DOM 里当浮层，默认不可见、不占位 */
+body:not(:has([data-sidebar-collapsed])) [class*="panelRow"] [class*="panelTitle"] {
+  position: absolute !important;
+  left: 50% !important;
+  top: calc(100% + 6px) !important;
+  transform: translateX(-50%) !important;
+  max-width: 220px !important;
+  padding: 4px 8px !important;
+  border-radius: 6px !important;
+  font-size: 13px !important;
+  line-height: 18px !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  color: #fff !important;
+  background: rgba(24, 24, 27, .96) !important;
+  border: 1px solid rgba(255, 255, 255, .14) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .45) !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition: opacity .12s ease, transform .12s ease !important;
+  z-index: 30 !important;
+}
+
+/* 1c. 鼠标悬停或键盘聚焦时浮出（两个平台都只有 CSS，没有脚本参与） */
+body:not(:has([data-sidebar-collapsed])) [class*="panelRow"]:hover,
+body:not(:has([data-sidebar-collapsed])) [class*="panelRow"]:focus-visible {
+  z-index: 30 !important;
+}
+
+body:not(:has([data-sidebar-collapsed])) [class*="panelRow"]:hover [class*="panelTitle"],
+body:not(:has([data-sidebar-collapsed])) [class*="panelRow"]:focus-visible [class*="panelTitle"] {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateX(-50%) translateY(2px) !important;
+}
+
+/* 1d. 当前面板的高亮底色（官方 .panelActive 在方块态同样成立） */
+body:not(:has([data-sidebar-collapsed])) [class*="panelRow"][class*="panelActive"] {
+  background: var(--dsw-alias-interactive-bg-hover) !important;
+}
+
+/* ── 2. 页脚：动作图标钉到账号行右侧 ─────────────────────────────── */
+
+/* 2a. 唯一锚点 = footArea（侧栏最底部那一块）。中间层全部取消定位。 */
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] {
+  position: relative !important;
+}
+
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] > * {
+  position: static !important;
+}
+
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] {
+  position: static !important;
+  overflow: visible !important;
+  width: 100% !important;
+  min-height: 0 !important;
+}
+
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] *:not(button) {
+  position: static !important;
+  overflow: visible !important;
+}
+
+/* 2b. 页脚动作按钮：脱离文档流，落到 footArea 右下角（= 账号行右侧）。
+    排除 cost-meter 支出卡内部的可点元素（若该插件重新装上）。 */
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] button:not([class*="cm-footer-stack"] *) {
+  position: absolute !important;
+  right: 6px !important;
+  bottom: 6px !important;
+  width: 36px !important;
+  height: 36px !important;
+  flex: 0 0 auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: 0 !important;
+  min-width: 0 !important;
+  border-radius: 50% !important;
+  justify-content: center !important;
+  z-index: 2 !important;
+}
+
+/* 2c. 多个动作图标从右往左依次排开：最后一个贴右 6px，每多一个再往左让 42px
+     （36px 图标 + 6px 间隙），最多排到第 5 个。以前只写了前两个的位置，
+     所以一旦有插件再加一个按钮，它会落回默认位和电话图标叠在一起 —— 现在补齐。
+     · 结构 A：按钮是同父兄弟 → 用「从末尾数」的 :nth-last-of-type，与总数无关
+     · 结构 B：每个按钮各自被包一层 → 用包装层的 :nth-child，并以 :only-of-type
+       限定（结构 A 里按钮不是 only-of-type，两条路不会互相打架） */
+
+/* —— 结构 A：同父兄弟 —— */
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] button:not([class*="cm-footer-stack"] *):nth-last-of-type(1) {
+  right: 6px !important;
+}
+
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] button:not([class*="cm-footer-stack"] *):nth-last-of-type(2) {
+  right: 48px !important;
+}
+
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] button:not([class*="cm-footer-stack"] *):nth-last-of-type(3) {
+  right: 90px !important;
+}
+
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] button:not([class*="cm-footer-stack"] *):nth-last-of-type(4) {
+  right: 132px !important;
+}
+
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] button:not([class*="cm-footer-stack"] *):nth-last-of-type(5) {
+  right: 174px !important;
+}
+
+/* —— 结构 B：各自被包一层 —— */
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] > *:nth-child(2) button:only-of-type,
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] > * > *:nth-child(2) button:only-of-type,
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] > * > * > *:nth-child(2) button:only-of-type,
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] > * > * > * > *:nth-child(2) button:only-of-type {
+  right: 48px !important;
+}
+
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] > *:nth-child(3) button:only-of-type,
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] > * > *:nth-child(3) button:only-of-type,
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] > * > * > *:nth-child(3) button:only-of-type,
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] > * > * > * > *:nth-child(3) button:only-of-type {
+  right: 90px !important;
+}
+
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] > *:nth-child(4) button:only-of-type,
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] > * > *:nth-child(4) button:only-of-type,
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] > * > * > *:nth-child(4) button:only-of-type,
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] > * > * > * > *:nth-child(4) button:only-of-type {
+  right: 132px !important;
+}
+
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] > *:nth-child(5) button:only-of-type,
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] > * > *:nth-child(5) button:only-of-type,
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] > * > * > *:nth-child(5) button:only-of-type,
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] > * > * > * > *:nth-child(5) button:only-of-type {
+  right: 174px !important;
+}
+
+/* 2d. 圆图标里藏掉按钮自带的文字 span */
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] button:not([class*="cm-footer-stack"] *) > span:nth-child(2) {
+  display: none !important;
+}
+
+/* 2e. 账号 / 设置行：给右侧的图标让出空间 —— 让位宽度跟着「实际几颗图标」走，不写死。
+     只有 1 颗 → 50px（6 边距 + 36 图标 + 6 边距 + 2 余量）；
+     出现第 2 颗 → 92px（≈ 6 + 36 + 6 + 36 + 6 + 2）；再多依 42px 递增
+     （3 个 134px、4 个 176px、5 个 218px）。
+     写死 92px 时，页脚只剩 1 颗按钮会多出一条 42px 的空气带，
+     看着像「空白格子、悬停没反应、点了也没动静」——那是让位多留的，不是图标被藏了。
+     box-sizing 是让 padding 真正向内让位的前提（这两个元素默认 content-box，
+     只加 padding 只会把盒子撑大、向右溢出）。 */
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="settingsArea"],
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="triggerRow"] {
+  box-sizing: border-box !important;
+}
+
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="settingsArea"] {
+  padding-right: 50px !important;
+}
+
+/* 出现第 2 个图标 */
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"]:has([class*="footerActions"] button:nth-last-of-type(2)) [class*="settingsArea"],
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"]:has([class*="footerActions"] > *:nth-child(2) > button) [class*="settingsArea"],
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"]:has([class*="footerActions"] > * > *:nth-child(2) > button) [class*="settingsArea"] {
+  padding-right: 92px !important;
+}
+
+/* 出现第 3 个图标 */
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"]:has([class*="footerActions"] button:nth-last-of-type(3)) [class*="settingsArea"],
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"]:has([class*="footerActions"] > *:nth-child(3) > button) [class*="settingsArea"],
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"]:has([class*="footerActions"] > * > *:nth-child(3) > button) [class*="settingsArea"] {
+  padding-right: 134px !important;
+}
+
+/* 出现第 4 个图标 */
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"]:has([class*="footerActions"] button:nth-last-of-type(4)) [class*="settingsArea"],
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"]:has([class*="footerActions"] > *:nth-child(4) > button) [class*="settingsArea"],
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"]:has([class*="footerActions"] > * > *:nth-child(4) > button) [class*="settingsArea"] {
+  padding-right: 176px !important;
+}
+
+/* 出现第 5 个图标 */
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"]:has([class*="footerActions"] button:nth-last-of-type(5)) [class*="settingsArea"],
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"]:has([class*="footerActions"] > *:nth-child(5) > button) [class*="settingsArea"],
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"]:has([class*="footerActions"] > * > *:nth-child(5) > button) [class*="settingsArea"] {
+  padding-right: 218px !important;
+}
+
+/* 2f. footerActions 里的按钮全都被 2b/2c 绝对定位钉到 footArea 右下角了，
+      可它自己还留着一个 36px 的空盒子在文档流里占位 —— 这就是账号行上方那条空白带。
+      高度归零（overflow 保持 visible，钉住的图标不受任何影响）。 */
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] > [class*="footerActions"] {
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+
+/* ── 3. 会话轨不再硬撑 180px ────────────────────────────────────── */
+body:not(:has([data-sidebar-collapsed])) .ima-rail {
+  min-height: 0 !important;
+}
