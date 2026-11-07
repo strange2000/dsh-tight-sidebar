@@ -4,7 +4,7 @@
   "name": "紧凑侧边栏",
   "nameEn": "Tight Sidebar",
   "version": "2.0.0",
-  "author": "strange",
+  "author": "strange2000",
   "tagline": "把侧边栏纵向空间还给「工作区」",
   "description": "只改排版，不改配色：全局面板列表收成一行图标条（悬停浮出文字）、页脚动作图标并入账号行右侧、清掉遗留空带、会话轨不再硬撑 180px。用于把被挤压的「工作区」会话列表重新长大。",
   "tags": ["layout", "sidebar", "density"],
