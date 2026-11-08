@@ -6,3 +6,6 @@ contact_links:
   - name: 想看这 21 版是怎么试出来的
     url: https://github.com/strange2000/dsh-tight-sidebar/blob/main/CHANGELOG.md
     about: 10 条死路各自为什么失败都写在 CHANGELOG 里，改样式前值得先扫一眼。
+  - name: 不是 bug 的问题去 Discussions 问
+    url: https://github.com/strange2000/dsh-tight-sidebar/discussions/categories/q-a
+    about: 「这样改行不行」「能不能加个 X」「我的 DSH 版本这么配对吗」这类讨论放这里；确认是缺陷再开 Issue。
