@@ -1,0 +1,38 @@
+name: validate-skin
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: 校验皮肤清单与样式表
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 运行零依赖校验
+        run: node scripts/validate-skin.mjs
+
+      - name: 打包发布资产（仅校验能打出来）
+        run: |
+          mkdir -p dist/tight-sidebar
+          cp skin/skin.json skin/skin.css skin/patches.css dist/tight-sidebar/
+          cp LICENSE dist/tight-sidebar/
+          cd dist && zip -r ../dsh-tight-sidebar.zip tight-sidebar >/dev/null
+          ls -l ../dsh-tight-sidebar.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dsh-tight-sidebar-zip
+          path: dsh-tight-sidebar.zip
+          if-no-files-found: error

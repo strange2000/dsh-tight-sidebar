@@ -1,0 +1,77 @@
+name: 皮肤没生效 / 界面被挤坏
+description: 装上紧凑侧边栏后侧边栏没变化、面板错位、图标重叠，或者更新 DSH 之后坏了
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈。这个皮肤改的是 DSH 侧边栏的 DOM 排版，DSH 每次改版都可能让它失准。
+        把下面几项填全，我基本能一次定位，不用来回问。
+
+  - type: input
+    id: dsh-version
+    attributes:
+      label: DSH 版本
+      description: 设置 → 关于 里的版本号（例如 2.0.22-next）。这一项最关键。
+      placeholder: 2.0.22-next
+    validations:
+      required: true
+
+  - type: input
+    id: skin-version
+    attributes:
+      label: 皮肤版本
+      description: skin/skin.json 里的 version，或下载的 zip 文件名
+      placeholder: 2.0.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: 平台
+      options:
+        - Windows 桌面版
+        - macOS 桌面版
+        - Web GUI
+    validations:
+      required: true
+
+  - type: textarea
+    id: symptom
+    attributes:
+      label: 现象
+      description: 哪一块不对？面板条 / 页脚图标 / 会话列表 / 整体。
+      placeholder: 面板图标条只排了一列，没有变成 2 行；页脚图标跑到左下角了。
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: 截图
+      description: 直接把改前 / 改后截图拖进来。没有截图很难判断是样式没加载还是选择器失准。
+    validations:
+      required: true
+
+  - type: textarea
+    id: console
+    attributes:
+      label: 控制台报错（F12 → Console）
+      description: 有报错就贴，没有就写「无」。样式被安全管线拦掉时这里会有线索。
+      render: text
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: 提交前确认
+      options:
+        - label: 我已经**彻底退出 DSH 再重新打开**过（桌面端没有页面刷新快捷键）
+          required: true
+        - label: 三个文件（skin.json / skin.css / patches.css）都在 `~/.dsh/skins/tight-sidebar/` 里
+          required: true
+        - label: 皮肤中心插件 `@linxin666/dsh-client-ui-skin-center` 已安装并启用
+          required: true

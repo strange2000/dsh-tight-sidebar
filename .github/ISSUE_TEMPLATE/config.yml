@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 安装 / 使用问题先看 README
+    url: https://github.com/strange2000/dsh-tight-sidebar#-安装
+    about: 三步安装、启用方式、回滚方法都写在 README 里了，多数问题看一遍就能解决。
+  - name: 想看这 21 版是怎么试出来的
+    url: https://github.com/strange2000/dsh-tight-sidebar/blob/main/CHANGELOG.md
+    about: 10 条死路各自为什么失败都写在 CHANGELOG 里，改样式前值得先扫一眼。
