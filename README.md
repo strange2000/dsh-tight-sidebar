@@ -78,8 +78,10 @@
 
 需要 DSH 已装皮肤中心插件 `@linxin666/dsh-client-ui-skin-center`（它提供 `~/.dsh/skins` 目录与 L3 补丁通道）。
 
+> **不想碰命令行？** 直接下发布包 **[dsh-tight-sidebar-v2.0.0.zip](https://github.com/strange2000/dsh-tight-sidebar/releases/latest)**，解压后把里面的 `tight-sidebar` 整个文件夹放进 `~/.dsh/skins/`（Windows 是 `%USERPROFILE%\.dsh\skins\`），三个文件就位了，然后从第 2️⃣ 步开始。压缩包里另附一份 `安装说明.txt`。
+
 ```bash
-# 1️⃣ 三个文件放进用户皮肤目录
+# 1️⃣ 或者：三个文件手动放进用户皮肤目录
 #    macOS:   ~/.dsh/skins/tight-sidebar/
 #    Windows: %USERPROFILE%\.dsh\skins\tight-sidebar\
 

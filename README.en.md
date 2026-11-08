@@ -76,8 +76,10 @@ Every rule is prefixed with `body:not(:has([data-sidebar-collapsed]))` — **the
 
 Requires the skin-center plugin `@linxin666/dsh-client-ui-skin-center` (it provides the `~/.dsh/skins` directory and the L3 patch channel).
 
+> **No terminal?** Grab the release zip **[dsh-tight-sidebar-v2.0.0.zip](https://github.com/strange2000/dsh-tight-sidebar/releases/latest)**, unzip it, and drop the whole `tight-sidebar` folder into `~/.dsh/skins/` (`%USERPROFILE%\.dsh\skins\` on Windows). All three files land in place — continue from step 2️⃣. The zip also ships an `安装说明.txt` with the same steps.
+
 ```bash
-# 1️⃣ Copy the three files into the user skin directory
+# 1️⃣ Or copy the three files into the user skin directory
 #    macOS:   ~/.dsh/skins/tight-sidebar/
 #    Windows: %USERPROFILE%\.dsh\skins\tight-sidebar\
 
