@@ -187,28 +187,20 @@ body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActi
 }
 
 /* 2d. 圆图标里藏掉按钮自带的文字 span */
-body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] button:not([class*="cm-footer-stack"] *) > span:nth-child(2) {
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] button:not([class*="cm-footer-stack"] *) > span:nth-child(2):not(:has(svg)) {
   display: none !important;
 }
 
-/* 2e. 账号 / 设置行：给右侧的图标让出空间 —— 让位宽度跟着「实际几颗图标」走，不写死。
-     只有 1 颗 → 50px（6 边距 + 36 图标 + 6 边距 + 2 余量）；
-     出现第 2 颗 → 92px（≈ 6 + 36 + 6 + 36 + 6 + 2）；再多依 42px 递增
-     （3 个 134px、4 个 176px、5 个 218px）。
-     写死 92px 时，页脚只剩 1 颗按钮会多出一条 42px 的空气带，
-     看着像「空白格子、悬停没反应、点了也没动静」——那是让位多留的，不是图标被藏了。
-     box-sizing 是让 padding 真正向内让位的前提（这两个元素默认 content-box，
-     只加 padding 只会把盒子撑大、向右溢出）。 */
-body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="settingsArea"],
-body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="triggerRow"] {
-  box-sizing: border-box !important;
-}
-
+/* 2e. 账号 / 设置行：按「实际有几个图标」让位，不再固定按 2 个算。
+     v19 修正：原来写死 92px（= 2 个图标），只有 1 个图标时会白白空出 42px，
+     表现为账号行右边有一条空带、看起来像「少画了一个按钮」（无悬停、无点击）。
+     现在：1 个 → 50px 起；出现第 2 个才升到 92px；3/4/5 个依次 134/176/218px。
+     「多出来的图标」同时用两种结构判定，与 2c 的排布保持一致。 */
 body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="settingsArea"] {
   padding-right: 50px !important;
 }
 
-/* 出现第 2 个图标 */
+/* 出现第 2 个图标 → 让 92px（旧版一直用的就是这个值） */
 body:not(:has([data-sidebar-collapsed])) [class*="footArea"]:has([class*="footerActions"] button:nth-last-of-type(2)) [class*="settingsArea"],
 body:not(:has([data-sidebar-collapsed])) [class*="footArea"]:has([class*="footerActions"] > *:nth-child(2) > button) [class*="settingsArea"],
 body:not(:has([data-sidebar-collapsed])) [class*="footArea"]:has([class*="footerActions"] > * > *:nth-child(2) > button) [class*="settingsArea"] {
@@ -236,9 +228,56 @@ body:not(:has([data-sidebar-collapsed])) [class*="footArea"]:has([class*="footer
   padding-right: 218px !important;
 }
 
-/* 2f. footerActions 里的按钮全都被 2b/2c 绝对定位钉到 footArea 右下角了，
-      可它自己还留着一个 36px 的空盒子在文档流里占位 —— 这就是账号行上方那条空白带。
-      高度归零（overflow 保持 visible，钉住的图标不受任何影响）。 */
+/* ── v17 · 2f. 让位一直没生效的原因：content-box 把「让位」变成「撑宽」──
+   实测坐标（Web GUI 1280×800、侧栏 280px 展开，取真实 DOM）：
+     footArea      x=12 … 268
+     页脚两颗图标   远程控制 x=184…220 / 检查更新 x=226…262（y=752…788，36×36）
+     账号行         x=10 … 270（与图标同一条水平带）
+     settingsArea   加上 padding-right:92 后实测宽 348px（x=12…360）→ 溢出侧栏 80px
+   结论：settingsArea / triggerRow 是 content-box，padding 会把盒子撑大而不是向内让位，
+   所以上一条「给账号行让出空间」实际做的是「把整行往右推」，越让越压。
+   这里补 box-sizing: border-box，92px 才真的向内让（2 颗图标占用 6+36+6+36+6+2）。 */
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="settingsArea"],
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="triggerRow"] {
+  box-sizing: border-box !important;
+}
+
+/* ── v17 · 2g. 连接状态药丸：在侧栏页脚里不显示 ───────────────────
+   就是那枚绿色「✓ 连接成功」。真实身份是宿主外壳的 ConnectionIndicator
+   （类名 _indicator_1gwo3_1 + 成功态 _success_1gwo3_63，role=status /
+   aria-label=连接成功），只在刚连上 / 重连的那几秒出现，宽约 120px。
+   而右下角已被两颗 36px 图标固定占住（见 2f 的实测坐标），那条水平带塞不下
+   「名字 + 120px 药丸 + 两颗图标」，必然互相压。
+   它是瞬态状态提示、不影响功能，所以只在侧栏页脚范围内隐藏；页脚以外的
+   同款指示器（设置页页眉等宽栏位）不受影响。
+   → 想改回「只留对勾的小圆点」：把 display:none 换成
+     width:22px !important; overflow:hidden !important; 即可。 */
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="indicator_1gwo3"],
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [role="status"] {
+  display: none !important;
+}
+
+/* ── v18 · 2h. 页脚圆形按钮里的图标：保证真的被画出来 ─────────────
+   症状（2026-11-02 22:10，桌面 App）：📱 正常，↓ 那一格有位置但空白。
+   同一份 CSS 在 Web GUI 里两颗都正常，差别只在「更新可用」这一状态
+   （App 里 updateAvailable=true → 按钮带 data-update-available / data-wide="wide"，
+   并多渲染一个文字 span）。图标本身是 SVG，尺寸若被父级 font-size / flex 影响，
+   就会缩到 0×0 或高度塌陷，看上去就是「有占位没图形」。
+   这条只做一件事：把按钮内的 SVG 钉成 16×16 居中可见，不改布局、不改定位。 */
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] button > svg {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  min-height: 16px !important;
+  flex: 0 0 auto !important;
+}
+
+/* ── v21 · 2i. footerActions「旧房子」：按钮全被 2b/2c 钉到 footArea 右下角了，
+   容器自己却还留着一条高度在文档流里占位 —— 就是会话列表下方、今日用量上方
+   那条空白带。高度归零（overflow 保持 visible，钉住的图标一个像素都不动）。 */
 body:not(:has([data-sidebar-collapsed])) [class*="footArea"] > [class*="footerActions"] {
   height: 0 !important;
   min-height: 0 !important;

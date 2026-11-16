@@ -9,7 +9,7 @@
 
 <p>
 <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-3da639?style=flat-square" alt="MIT"></a>
-<a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-2.0.0-ff8f2e?style=flat-square" alt="2.0.0"></a>
+<a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-2.1.0-ff8f2e?style=flat-square" alt="2.1.0"></a>
 <a href="#-三段式原理"><img src="https://img.shields.io/badge/pure-CSS-c85cff?style=flat-square" alt="pure CSS"></a>
 <a href="#-安装"><img src="https://img.shields.io/badge/platform-DSH%20NEXT%20%C2%B7%20Desktop-2f6feb?style=flat-square" alt="platform"></a>
 <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/iterations-21%20(10%20dead%20ends)-8b96a8?style=flat-square" alt="iterations"></a>
@@ -78,7 +78,7 @@
 
 需要 DSH 已装皮肤中心插件 `@linxin666/dsh-client-ui-skin-center`（它提供 `~/.dsh/skins` 目录与 L3 补丁通道）。
 
-> **不想碰命令行？** 直接下发布包 **[dsh-tight-sidebar-v2.0.0.zip](https://github.com/strange2000/dsh-tight-sidebar/releases/latest)**，解压后把里面的 `tight-sidebar` 整个文件夹放进 `~/.dsh/skins/`（Windows 是 `%USERPROFILE%\.dsh\skins\`），三个文件就位了，然后从第 2️⃣ 步开始。压缩包里另附一份 `安装说明.txt`。
+> **不想碰命令行？** 直接下发布包 **[dsh-tight-sidebar-v2.1.0.zip](https://github.com/strange2000/dsh-tight-sidebar/releases/latest)**，解压后把里面的 `tight-sidebar` 整个文件夹放进 `~/.dsh/skins/`（Windows 是 `%USERPROFILE%\.dsh\skins\`），三个文件就位了，然后从第 2️⃣ 步开始。压缩包里另附一份 `安装说明.txt`。
 
 ```bash
 # 1️⃣ 或者：三个文件手动放进用户皮肤目录

@@ -9,7 +9,7 @@
 
 <p>
 <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-3da639?style=flat-square" alt="MIT"></a>
-<a href="CHANGELOG.en.md"><img src="https://img.shields.io/badge/version-2.0.0-ff8f2e?style=flat-square" alt="2.0.0"></a>
+<a href="CHANGELOG.en.md"><img src="https://img.shields.io/badge/version-2.1.0-ff8f2e?style=flat-square" alt="2.1.0"></a>
 <a href="#-how-it-works"><img src="https://img.shields.io/badge/pure-CSS-c85cff?style=flat-square" alt="pure CSS"></a>
 <a href="#-install"><img src="https://img.shields.io/badge/platform-DSH%20NEXT%20%C2%B7%20Desktop-2f6feb?style=flat-square" alt="platform"></a>
 <a href="CHANGELOG.en.md"><img src="https://img.shields.io/badge/iterations-21%20(10%20dead%20ends)-8b96a8?style=flat-square" alt="iterations"></a>
@@ -76,7 +76,7 @@ Every rule is prefixed with `body:not(:has([data-sidebar-collapsed]))` — **the
 
 Requires the skin-center plugin `@linxin666/dsh-client-ui-skin-center` (it provides the `~/.dsh/skins` directory and the L3 patch channel).
 
-> **No terminal?** Grab the release zip **[dsh-tight-sidebar-v2.0.0.zip](https://github.com/strange2000/dsh-tight-sidebar/releases/latest)**, unzip it, and drop the whole `tight-sidebar` folder into `~/.dsh/skins/` (`%USERPROFILE%\.dsh\skins\` on Windows). All three files land in place — continue from step 2️⃣. The zip also ships an `安装说明.txt` with the same steps.
+> **No terminal?** Grab the release zip **[dsh-tight-sidebar-v2.1.0.zip](https://github.com/strange2000/dsh-tight-sidebar/releases/latest)**, unzip it, and drop the whole `tight-sidebar` folder into `~/.dsh/skins/` (`%USERPROFILE%\.dsh\skins\` on Windows). All three files land in place — continue from step 2️⃣. The zip also ships an `安装说明.txt` with the same steps.
 
 ```bash
 # 1️⃣ Or copy the three files into the user skin directory

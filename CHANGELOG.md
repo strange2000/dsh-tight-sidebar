@@ -7,9 +7,27 @@
 </div>
 
 > 一份「怎么走到今天」的完整记录。✅ = 维护者确认可用，❌ = 被推翻，⚠️ = 可用但埋了雷。
-> 版本号是迭代序号，不是发布号 —— **正式发布从 `2.0.0` 起**（对应 v21）。
+> 版本号是迭代序号，不是发布号 —— **正式发布从 `2.0.0` 起**（对应 v21），`2.1.0` = v22。
 
 ---
+
+## v22 · 16,241 B / 293 行 —— 🎯 第二个 `span` 里装的是图标时，别再把它当文字藏掉 ✅
+
+2d 那条把「按钮自带的文字标签」藏掉，圆图标里只留图形，选择器是 `span:nth-child(2)`。
+
+**坑**：桌面 App 的「有更新可用」状态会多渲染一个 span —— 而那个 span 里装的是**第二颗图标本身**（`svg`）。`display: none` 于是把图标一起藏了：位置还在、图形没了，看上去就是「↓ 那一格有位置但空白」。同一份 CSS 在 Web GUI 正常，因为 Web GUI 不会有这个状态。
+
+修法：只在 span **里面没有 svg** 时才隐藏。
+
+```css
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] button:not([class*="cm-footer-stack"] *) > span:nth-child(2):not(:has(svg)) {
+  display: none !important;
+}
+```
+
+这一版同时把前几轮的量测写回就近注释（v17 的 content-box 实测坐标、v19 的让位颗数、连接药丸的真实身份 `ConnectionIndicator`），改代码时不用再翻 CHANGELOG。`skin.json` 的 `version` 也从 `2.0.0` 跟到 **`2.1.0`** —— 本机那份长期停在 `1.0.0`（本地自建时的元数据），没有跟着发布走，这次一并补齐。
+
+> 实测环境：macOS（Intel）+ DSH NEXT 桌面端；Web GUI 1280×800、侧栏 280px 展开。
 
 ## v21 · 13,440 B / 254 行 —— 🩹 清掉 36px 空白带 ✅
 

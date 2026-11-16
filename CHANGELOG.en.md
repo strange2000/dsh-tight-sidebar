@@ -7,9 +7,27 @@
 </div>
 
 > A complete record of how this skin got here. ✅ = maintainer-confirmed, ❌ = rejected, ⚠️ = works but hides a trap.
-> Version numbers are iteration indices, not releases — **the first release is `2.0.0`** (= v21).
+> Version numbers are iteration indices, not releases — **the first release is `2.0.0`** (= v21), `2.1.0` = v22.
 
 ---
+
+## v22 · 16,241 B / 293 lines — 🎯 When the second `span` holds an icon, stop treating it as a text label ✅
+
+Rule 2d hides a button's own text label so the round icon shows only its glyph; its selector is `span:nth-child(2)`.
+
+**Trap**: in the desktop app's "update available" state the button renders one extra span — and that span contains **the second icon itself** (`svg`). `display: none` took the icon with it: the slot stayed, the glyph vanished, which reads as "the ↓ cell is there but empty". The same CSS is fine in the Web GUI, which never enters that state.
+
+Fix: only hide the span when it contains **no** svg.
+
+```css
+body:not(:has([data-sidebar-collapsed])) [class*="footArea"] [class*="footerActions"] button:not([class*="cm-footer-stack"] *) > span:nth-child(2):not(:has(svg)) {
+  display: none !important;
+}
+```
+
+This release also moves the earlier measurements into inline comments (v17's content-box coordinates, v19's per-icon-count reservation, the real identity of the connection pill — `ConnectionIndicator`), so you no longer have to open the changelog while editing CSS. `skin.json`'s `version` follows along, `2.0.0` → **`2.1.0`** — the local copy had been stuck at `1.0.0` (metadata from when it was a private skin) and never tracked a release.
+
+> Tested on macOS (Intel) with DSH NEXT desktop; Web GUI 1280×800, sidebar expanded at 280px.
 
 ## v21 · 13,440 B / 254 lines — 🩹 Removing the 36px empty band ✅
 
